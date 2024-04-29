@@ -29,7 +29,7 @@ export const serverInit = () => {
         res.status(200).json({message: "Express + TypeScript Server"});
     });
     //user registration routers
-    app.use("/api",userRouter);
+    app.use("/api/v1",userRouter);
 
     app.listen(port, () => {
         console.log(`[server]: Server is running at http://localhost:${port}`);
