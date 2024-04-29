@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Confirmation</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .username {
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .activation-code {
+            font-size: 24px;
+            color: #ff6600;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Hello, <span class="username"><%= user.name %></span>!</h1>
+    <p>Thank you for purchasing the course.</p>
+    <p>Your activation code is: <span class="activation-code"><%= activationCode%></span></p>
+    <p>This code is valid for the next 5 minutes.</p>
+    <p>Enjoy your learning experience!</p>
+</div>
+</body>
+</html>
