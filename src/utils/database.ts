@@ -1,14 +1,18 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 
-const database_url:string = process.env.DATABASE_URL2 || " ";
+const DATABASE_URL: string = process.env.DATABASE_URL2 || " ";
 
-export const connectToDb = async ()=>{
-    try{
-        await mongoose.connect(database_url).then((data:any)=> console.log(`database connected on ${data.connection.host}`)).catch((err)=> console.log(err));
-    }catch (err:any){
+export const connectToDb = async () => {
+    try {
+        const response = await mongoose.connect(DATABASE_URL);
+        console.log(`database connected on ${response.connection.host}`);
+
+
+    } catch (err: any) {
         console.log(err.message)
         setTimeout(connectToDb, 5000)
     }

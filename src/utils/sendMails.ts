@@ -24,7 +24,7 @@ const sendMail = async (options: EmailOptions): Promise<void> => {
 
     const { email, subject, template, data } = options;
     // Get the template path
-    const templatePath = path.join(__dirname, "../views", `${template}`);
+    const templatePath = path.join(__dirname, "../views",`${template}`);
     // Rendering the email template with EJS
     const html: string = await ejs.renderFile(templatePath, data);
     // Sending email to the user
@@ -37,15 +37,6 @@ const sendMail = async (options: EmailOptions): Promise<void> => {
     await transporter.sendMail(emailOptions);
 }
 
-// Example usage:
-// const emailData = {
-//     email: "user@example.com",
-//     subject: "Welcome to our platform!",
-//     template: "welcome",
-//     data: { username: "User123", activationCode: "ABC123" },
-// };
-
-// sendMail(emailData).catch(console.error);
 
 export default sendMail;
 

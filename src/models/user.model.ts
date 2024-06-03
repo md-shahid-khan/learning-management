@@ -83,13 +83,13 @@ userSchema.pre<IUser>("save", async function (next) {
 //providing access token for user when ever come back to log in this access token will
 // be expire in every 5 mints
 userSchema.methods.SignAccessToken = function (){
-    return jwt.sign({id:this._id}, process.env.ACCESS_TOKEN || " ");
+    return jwt.sign({id:this._id}, process.env.ACCESS_TOKEN as string);
 }
 
 //providing refresh token so that we can refresh the access token it is highly secure way to authenticate
 //by using this way we can protect routes also
 userSchema.methods.SignRefreshToken = function (){
-    return jwt.sign({id:this._id}, process.env.REFRESH_TOKEN || " ");
+    return jwt.sign({id:this._id}, process.env.REFRESH_TOKEN as string);
 }
 
 //comparing the password which user provide

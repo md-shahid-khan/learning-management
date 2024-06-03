@@ -11,7 +11,9 @@ import jwt from "jsonwebtoken";
 import {sendToken} from "../utils/jwt";
 import {redis} from "../utils/redis";
 
+
 require("dotenv").config();
+
 
 // interfaces for user regis body
 interface UserRegistrationBody {
@@ -67,6 +69,7 @@ interface IActivationToken {
 }
 
 export const createActivationUser = (user: UserRegistrationBody): IActivationToken => {
+    //returns four digit's activation code which you can receive on you email
     const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
     const token = JWT.sign({user, activationCode}, process.env.SECRET as string, {expiresIn: "5m"});
     return {token, activationCode};
@@ -126,16 +129,23 @@ export const loginUser = CatchAsyncError(async (req: Request, res: Response, nex
     }
 })
 
-export const logoutUser = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+
+export const logoutUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        res.cookie("access_token", "", {maxAge: 1});
-        res.cookie("refresh_token", "", {maxAge: 1});
+        // Clear the access token cookie
+        res.cookie("access_token", "", {maxAge: 0, httpOnly: true});
+
+        // Clear the refresh token cookie
+        res.cookie("refresh_token", "", {maxAge: 0, httpOnly: true});
+
+
+        // Send a success response
         res.status(200).json({
             success: true,
             message: "Logged out successfully",
-        })
-
+        });
     } catch (error: any) {
-        return next(new ErrorHandler(error.message, 400));
+        // If an error occurs, pass it to the error handler middleware
+        return next(new ErrorHandler(error.message || "Failed to logout", 500));
     }
-})
+};

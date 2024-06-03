@@ -1,4 +1,4 @@
-// Error handling i am using object oriented programming so that reuse some
+// Error handling I am using object Oriented programming so that reuse some
 // code for multiple reason
 
 class ErrorHandler extends Error {
