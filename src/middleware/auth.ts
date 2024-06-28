@@ -1,22 +1,21 @@
-import { Request, Response, NextFunction } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import {Request, Response, NextFunction} from "express";
+import jwt, {JwtPayload} from "jsonwebtoken";
 import ErrorHandler from "../utils/ErrorHandling";
-import { redis } from "../utils/redis";
+import {redis} from "../utils/redis";
 
 
 require("dotenv").config();
 
 
-
-export const isAuthenticated = async (req:Request, res:Response,next:NextFunction)=>{
-    const access_token = req.cookies.access_token || " ";
+export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
+    const access_token = req.cookies.access_token as string;
 
     if (!access_token) {
         return next(new ErrorHandler("Invalid access token", 400));
     }
 
     const decoded = jwt.verify(access_token, process.env.ACCESS_TOKEN as string) as JwtPayload;
-    console.log("decoded user",decoded);
+
     if (!decoded) {
         return next(new ErrorHandler("Access token is not valid", 400));
     }
@@ -24,10 +23,67 @@ export const isAuthenticated = async (req:Request, res:Response,next:NextFunctio
     if (!user) {
         return next(new ErrorHandler("User not found", 404));
     }
-
-    console.log("user info found here",user)
-
     req.user = JSON.parse(user);
     next();
 }
+
+//validate user role
+export const authorizeRole=(...Role:string[])=>{
+    return (req:Request, res:Response, next:NextFunction)=>{
+        if(Role.includes(req.user?.role || "")){
+            return next(new ErrorHandler(`Role: ${req.user?.role} is not allowed`, 403));
+        }
+        next();
+    }
+
+}
+
+
+
+// import {Request, Response, NextFunction} from "express";
+// import jwt, {JwtPayload} from "jsonwebtoken";
+// import ErrorHandler from "../utils/ErrorHandling";
+// import {redis} from "../utils/redis";
+//
+// require("dotenv").config();
+//
+// export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
+//     const access_token = req.cookies.access_token as string;
+//
+//     if (!access_token) {
+//         return next(new ErrorHandler("please login to access this resource", 400));
+//     }
+//
+//     try {
+//         const decoded = jwt.verify(access_token, process.env.ACCESS_TOKEN as string) as JwtPayload;
+//
+//         if (!decoded) {
+//             return next(new ErrorHandler("Access token is not valid", 400));
+//         }
+//
+//         const user = await redis.get(decoded.id.toString());
+//
+//         if (!user) {
+//             return next(new ErrorHandler("User not found", 404));
+//         }
+//
+//         req.user = JSON.parse(user);
+//         next();
+//     } catch (err) {
+//         return next(new ErrorHandler("Failed to authenticate token", 401));
+//     }
+// };
+//
+// // Validate user role
+// export const authorizeRole = (...roles: string[]) => {
+//     return (req: Request, res: Response, next: NextFunction) => {
+//         const userRole = req.user?.role || "";
+//
+//         if (!roles.includes(userRole)) {
+//             return next(new ErrorHandler(`Role: ${userRole} is not allowed`, 403));
+//         }
+//
+//         next();
+//     };
+// };
 

@@ -1,12 +1,13 @@
 import express, {Express, NextFunction, Request, Response} from "express";
 import dotenv from "dotenv";
-import connectToDb from "./utils/database";
+
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import {ErrorMiddleware} from "./middleware/error";
 import userRouter from "./routes/user.route";
 import path from "path";
 import {IUser} from "./models/user.model";
+import connectToDb from "./utils/database";
 
 //variables and config
 dotenv.config();
@@ -37,9 +38,10 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
 //user registration routers
 app.use("/api/v1", userRouter);
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
-    connectToDb()
+    await connectToDb();
+
 });
 // checking for any error
 app.use(ErrorMiddleware);
